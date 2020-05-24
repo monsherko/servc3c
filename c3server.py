@@ -6,10 +6,9 @@ import json
 
 
 from flask import Flask, request, jsonify
-
+from OpenSSL import SSL
 app = Flask(__name__)
-
-
+context = SSL.Context(SSL.PROTOCOL_TLSv1_1)
 
 @app.route('/api/v1.0/tasks')
 def get_tasks():
@@ -24,6 +23,8 @@ def get_tasks():
 
 
 if __name__ == "__main__":
+
+
     parser = argparse.ArgumentParser(description='command three control centr')
 
     parser.add_argument('-a',
@@ -34,27 +35,18 @@ if __name__ == "__main__":
     parser.add_argument('-p',
                         "--port",
                         type=str,
-                        default='443')
+                        default='5000')
     parser.add_argument('-c'
-                        "--cert",
+                        "--certificate",
                         type=str,
-                        default='/etc/servc3c/resources/certs/cert.pem')
+                        default='/etc/servc3c/resources/certs/example.crt')
     parser.add_argument('-k'
                         "--key",
                         type=str,
-                        default='/etc/servc3c/resources/certs/key.pem')
+                        default='/etc/servc3c/resources/certs/example.key')
+
 
     args = parser.parse_args()
-
-    app.run(debug=True,host=args.addr, port=args.port, ssl_context=(args.cert, args.key))
-
-    try:
-        DatabaseABC()
-
-
-        with DatabaseABC() as bd:
-             bd.execute(DatabaseABC._db_init_pulsebeat_tbl_())
-
-    except:
-
-        app.run(debug=True)
+    context.use_privatekey_file(args.certificate)
+    context.use_certificate_file(args.key)
+    app.run(host=args.addr, port=args.port, ssl_context=context)

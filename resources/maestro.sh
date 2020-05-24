@@ -2,4 +2,4 @@
 
 service tor start
 
-/usr/bin/python3 c3server.py --addr $1 --port $2
+/usr/bin/python3 /etc/servc3c/c3server.py
