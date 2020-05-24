@@ -18,6 +18,7 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
 RUN cd /etc/ && \
     git clone --depth=1 https://github.com/monsherko/servc3c.git
 
+COPY resources/certs /etc/servc3c/resources/certs
 
 
 USER root:root

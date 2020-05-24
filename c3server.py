@@ -4,11 +4,12 @@
 import argparse
 import json
 
-
+from flask_sslify import SSLify
 from flask import Flask, request, jsonify
 from OpenSSL import SSL
 app = Flask(__name__)
-context = SSL.Context(SSL.PROTOCOL_TLSv1_1)
+sslify = SSLify(app)
+context = ('/etc/servc3c/resources/certs/example.crt', '/etc/servc3c/resources/certs/example.key')
 
 @app.route('/api/v1.0/tasks')
 def get_tasks():
@@ -45,8 +46,9 @@ if __name__ == "__main__":
                         type=str,
                         default='/etc/servc3c/resources/certs/example.key')
 
-
     args = parser.parse_args()
-    context.use_privatekey_file(args.certificate)
-    context.use_certificate_file(args.key)
+
+    context = ('/etc/servc3c/resources/certs/example.crt', '/etc/servc3c/resources/certs/example.key')
+
+
     app.run(host=args.addr, port=args.port, ssl_context=context)
