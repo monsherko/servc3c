@@ -34,11 +34,19 @@ if __name__ == "__main__":
     parser.add_argument('-p',
                         "--port",
                         type=str,
-                        default='8080')
+                        default='443')
+    parser.add_argument('-c'
+                        "--cert",
+                        type=str,
+                        default='/etc/servc3c/resources/certs/cert.pem')
+    parser.add_argument('-k'
+                        "--key",
+                        type=str,
+                        default='/etc/servc3c/resources/certs/key.pem')
 
     args = parser.parse_args()
 
-    app.run(debug=True,host=args.addr,port=args.port)
+    app.run(debug=True,host=args.addr, port=args.port, ssl_context=(args.cert, args.key))
 
     try:
         DatabaseABC()

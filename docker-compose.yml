@@ -1,0 +1,34 @@
+version: '3.3'
+# command run:
+#   $ NS01=172.55.5.3 NS02=172.55.5.5 TARGETADDR=185.161.209.135 docker-compose up
+
+services:
+    c3serv:
+        build: /etc/servc3c/.
+        image: c3cserv
+        container_name: c3serv
+        tty: true
+        stdin_open: true
+        entrypoint:
+            - /usr/bin/python3
+            - c3server.py
+            - --addr
+            - ${NS01}
+        networks:
+            default:
+              ipv4_address: ${NS01}
+
+    tor3serv:
+        image: torserv
+        container_name: tor3serv
+        tty: true
+        stdin_open: true
+        networks:
+            default:
+              ipv4_address: ${NS02}
+
+
+networks:
+  default:
+    external:
+      name: local_network
